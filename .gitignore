@@ -110,3 +110,8 @@ ENV/
 
 # Tensorboard
 runs/
+
+# Directories
+/experiments/*
+*.ipynb
+/molecular_transformer_data/*
