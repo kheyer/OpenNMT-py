@@ -288,7 +288,8 @@ class Translator(object):
             batch_size=None,
             batch_type="sents",
             attn_debug=False,
-            phrase_table=""):
+            phrase_table="",
+            return_attention=False):
         """Translate content of ``src`` and get gold scores from ``tgt``.
 
         Args:
@@ -343,6 +344,7 @@ class Translator(object):
 
         all_scores = []
         all_predictions = []
+        all_attentions = []
 
         start_time = time.time()
 
@@ -363,6 +365,7 @@ class Translator(object):
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
                 all_predictions += [n_best_preds]
+                all_attentions += [trans.attns] 
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
@@ -427,7 +430,11 @@ class Translator(object):
             import json
             json.dump(self.translator.beam_accum,
                       codecs.open(self.dump_beam, 'w', 'utf-8'))
-        return all_scores, all_predictions
+
+        if return_attention:
+            return all_scores, all_predictions, all_attentions
+        else:
+            return all_scores, all_predictions
 
     def _translate_random_sampling(
             self,
