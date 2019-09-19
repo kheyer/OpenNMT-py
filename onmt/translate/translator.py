@@ -365,7 +365,7 @@ class Translator(object):
                 n_best_preds = [" ".join(pred)
                                 for pred in trans.pred_sents[:self.n_best]]
                 all_predictions += [n_best_preds]
-                all_attentions += [trans.attns] 
+                all_attentions += [[att.cpu().detach().numpy() for att in trans.attns]]
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
                 self.out_file.flush()
 
